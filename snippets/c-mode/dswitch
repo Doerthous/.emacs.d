@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: switch
+# key: dsw
+# --
+switch (${1:}) {
+    ${2:}
+}

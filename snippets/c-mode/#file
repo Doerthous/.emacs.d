@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: c file comment
+# key: #file
+# --
+
+/**
+  ******************************************************************************
+  * \brief      $1
+  * \file       `(file-name-nondirectory (buffer-file-name))`
+  * \author     $2
+  * \date       `(format-time-string "%Y-%m-%d")`
+  * \details    $3
+  ******************************************************************************
+  */
+
+$0
+
+/****************************** Copy right `(format-time-string "%Y")` *******************************/

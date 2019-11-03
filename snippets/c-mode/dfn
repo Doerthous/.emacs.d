@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: defun
+# key: dfn
+# --
+${1:void} ${2:fun_name}(${3:void})
+{
+    ${4:/* code */}
+}
