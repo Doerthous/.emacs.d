@@ -6,6 +6,7 @@
 (global-set-key (kbd "C-c {") 'hs-show-all)
 (global-set-key (kbd "C-c }") 'hs-hide-all)
 (global-set-key (kbd "C-?") 'comment-or-uncomment-region)
+(global-set-key (kbd "C-c m") 'set-mark-command)
 
 (if (not (featurep 'tabbar))
     (message "%s" "tabbar is not loaded\n")
