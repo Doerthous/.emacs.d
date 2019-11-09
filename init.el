@@ -6,6 +6,8 @@
 ;;(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("melpa-stable" . "http://melpa.org/packages/"))
+
+(require 'linum)
 ;; company
 ;; (require 'company)
 ;; (add-hook 'after-init-hook 'global-company-mode)
