@@ -56,6 +56,7 @@
 ;; (global-semanticdb-minor-mode 1)
 ;; (global-semantic-idle-scheduler-mode 1)
 ;; (semantic-mode 1)
+(require 'transpose-frame)
 
 (load "~/.emacs.d/dts-c-mode.el")
 (load "~/.emacs.d/dts-key-binding.el")
