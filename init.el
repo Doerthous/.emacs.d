@@ -3,24 +3,24 @@
 
 (require 'package)
 (package-initialize)
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 ;;(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("melpa-stable" . "http://melpa.org/packages/"))
-;; company
-;; (require 'company)
-;; (add-hook 'after-init-hook 'global-company-mode)
-;; (with-eval-after-load 'company
-;;   (define-key company-active-map (kbd "n") (lambda () (interactive) (company-complete-common-or-cycle 1)))
-;;  (define-key company-active-map (kbd "p") (lambda () (interactive) (company-complete-common-or-cycle -1))))
+;; (add-to-list 'package-archives '("melpa" . "https://mirrors.163.com/elpa/melpa/"))
+;; (add-to-list 'package-archives '("melpa-stable" . "https://mirrors.163.com/elpa/melpa-stable/"))
+;; (add-to-list 'package-archives '("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))
+;; (add-to-list 'package-archives '("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/"))
+(load "~/.emacs.d/dts-company.el")
 ;; multiple-cursors
 ;; (require 'multiple-cursors)
 ;; (global-set-key (kbd "C-S-<mouse-1>") 'mc/toggle-cursor-on-click)
 ;; expand-region
 ;; (require 'expand-region)
 ;; smex
-;; (require 'smex)
-;; (global-set-key (kbd "M-x") 'smex)
-;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+(require 'smex)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;; (global-set-key (kbd "C-c C-c M-x") 'executen-extended-command) ;; old M-x
 ;; ido
 ;; (require 'ido)
@@ -38,14 +38,14 @@
 ;; (global-set-key (kbd "C-S-s") 'sr-speedbar-toggle)
 ;; (setq sr-speedbar-right-side nil)
 ;; window-numbering
-;;(require 'window-numbering)
-;;(window-numbering-mode t)
+(require 'window-numbering)
+(window-numbering-mode t)
 ;; powerline
 (require 'powerline)
 (powerline-default-theme)
 ;; tabbar
-(require 'tabbar)
-(tabbar-mode 1)
+;;(require 'tabbar)
+;;(tabbar-mode 1)
 ;; git-gutter
 ;;(require 'git-gutter)
 ;;(global-git-gutter-mode t)
