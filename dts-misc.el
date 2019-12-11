@@ -24,3 +24,5 @@
 (defalias 'yes-or-no-p 'y-or-n-p) ;; yes-or-no -> y-or-n
 (setq default-buffer-file-coding-system 'utf-8) ;; default coding system for new file
 (prefer-coding-system 'utf-8)
+
+(setq linum-format "%d ")

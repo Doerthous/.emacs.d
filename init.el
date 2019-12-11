@@ -12,6 +12,9 @@
 ;; (add-to-list 'package-archives '("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))
 ;; (add-to-list 'package-archives '("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/"))
 (load "~/.emacs.d/dts-company.el")
+
+
+(require 'linum)
 ;; multiple-cursors
 ;; (require 'multiple-cursors)
 ;; (global-set-key (kbd "C-S-<mouse-1>") 'mc/toggle-cursor-on-click)
@@ -54,6 +57,7 @@
 ;; (global-semanticdb-minor-mode 1)
 ;; (global-semantic-idle-scheduler-mode 1)
 ;; (semantic-mode 1)
+(require 'transpose-frame)
 
 (load "~/.emacs.d/dts-c-mode.el")
 (load "~/.emacs.d/dts-key-binding.el")
