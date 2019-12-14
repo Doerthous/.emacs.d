@@ -10,19 +10,20 @@
                 (statement-block-intro . +) ; Guessed value
                 (topmost-intro . 0)         ; Guessed value
                 (case-label . 4) ;
-                (c . doerthous-c-lineup-C-comments)
+;                (c . doerthous-c-lineup-C-comments)
                 )
                ))
 
 
 ;;(add-hook 'c-mode-hook 'hs-minor-mode)
-;;(add-hook 'c-mode-hook 'company-mode)
-;;(add-hook 'c-mode-hook 'ggtags-mode)
+(add-hook 'c-mode-hook 'company-mode)
+(add-hook 'c-mode-hook 'ggtags-mode)
 ;;(add-hook 'c-mode-hook 'yas-minor-mode)
 
 (add-hook 'c-mode-hook 'doerthous-c-mode-hook)
 (defun doerthous-c-mode-hook()
-  (set (make-local-variable 'company-backends) '(company-dabbrev company-gtags company-yasnippet))
-  (local-set-key [C-tab] 'company-gtags)
+;  (set (make-local-variable 'company-backends) '(company-dabbrev company-gtags company-yasnippet))
+;  (local-set-key [C-tab] 'company-gtags)
   (c-set-style "dts-style")
-  (local-set-key (kbd "C-c C-r") 'doerthous-c-run))
+;  (local-set-key (kbd "C-c C-r") 'doerthous-c-run)
+  )

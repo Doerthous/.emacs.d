@@ -10,4 +10,4 @@
 
 (require 'company-c-headers)
 (add-to-list 'company-backends 'company-c-headers)
-(add-to-list 'company-c-headers-path-system "C:/Users/Doerthous/Desktop/env/mingw/include")
+(add-to-list 'company-c-headers-path-system "/usr/include")
