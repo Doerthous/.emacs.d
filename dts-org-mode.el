@@ -1,0 +1,8 @@
+(require 'org-sidebar)
+(setq org-log-done-with-time 1)
+(setq org-log-done 'time)
+(require 'ox-md)
+(setq org-image-actual-width (/ (display-pixel-width) 3))
+;(add-hook 'org-mode-hook '(lambda () (setq fill-column 80)))
+;(add-hook 'org-mode-hook 'turn-on-auto-fill)
+(define-key org-mode-map "\M-q" 'toggle-truncate-lines)

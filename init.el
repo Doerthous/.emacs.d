@@ -2,7 +2,6 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
 (require 'package)
-(package-initialize)
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 ;;(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
@@ -11,6 +10,7 @@
 ;; (add-to-list 'package-archives '("melpa-stable" . "https://mirrors.163.com/elpa/melpa-stable/"))
 ;; (add-to-list 'package-archives '("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))
 ;; (add-to-list 'package-archives '("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/"))
+(package-initialize)
 (load "~/.emacs.d/dts-company.el")
 
 
@@ -63,6 +63,7 @@
 (load "~/.emacs.d/dts-key-binding.el")
 (load "~/.emacs.d/dts-theme.el")
 (load "~/.emacs.d/dts-misc.el")
+(load "~/.emacs.d/dts-org-mode.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; customizations 
