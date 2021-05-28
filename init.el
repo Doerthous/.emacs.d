@@ -11,20 +11,17 @@
 ;; (add-to-list 'package-archives '("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))
 ;; (add-to-list 'package-archives '("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/"))
 (package-initialize)
-(load "~/.emacs.d/dts-company.el")
 
 
-(require 'linum)
+
+
+
 ;; multiple-cursors
 ;; (require 'multiple-cursors)
 ;; (global-set-key (kbd "C-S-<mouse-1>") 'mc/toggle-cursor-on-click)
-;; expand-region
-;; (require 'expand-region)
-;; smex
-(require 'smex)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; (global-set-key (kbd "C-c C-c M-x") 'executen-extended-command) ;; old M-x
+
+
+
 ;; ido
 ;; (require 'ido)
 ;; (ido-mode t)
@@ -32,20 +29,13 @@
 ;; (require 'yasnippet)
 ;; (yas-global-mode 1)
 ;; (setq yas-triggers-in-field t)
+
 ;; cc-mode
-(require 'cc-mode)
-;; whiltespacs
-;; (require 'whitespace)
-;; speedbar
-;; (require 'sr-speedbar)
-;; (global-set-key (kbd "C-S-s") 'sr-speedbar-toggle)
-;; (setq sr-speedbar-right-side nil)
-;; window-numbering
-(require 'window-numbering)
-(window-numbering-mode t)
-;; powerline
-(require 'powerline)
-(powerline-default-theme)
+;(require 'cc-mode)
+
+
+
+
 ;; tabbar
 ;;(require 'tabbar)
 ;;(tabbar-mode 1)
@@ -57,27 +47,50 @@
 ;; (global-semanticdb-minor-mode 1)
 ;; (global-semantic-idle-scheduler-mode 1)
 ;; (semantic-mode 1)
-(require 'transpose-frame)
 
-(load "~/.emacs.d/dts-c-mode.el")
+
+
+
+;;(load "~/.emacs.d/dts-c-mode.el")
 (load "~/.emacs.d/dts-key-binding.el")
 (load "~/.emacs.d/dts-theme.el")
 (load "~/.emacs.d/dts-misc.el")
 (load "~/.emacs.d/dts-org-mode.el")
+(load "~/.emacs.d/dts-sr-speedbar.el")
+(load "~/.emacs.d/dts-company.el")
+(load "~/.emacs.d/dts-transpose-frame.el")
+(load "~/.emacs.d/dts-powerline.el")
+(load "~/.emacs.d/dts-window-numbering.el")
+(load "~/.emacs.d/dts-linum.el")
+(load "~/.emacs.d/dts-smex.el")
+(load "~/.emacs.d/dts-whitespace.el")
+(load "~/.emacs.d/dts-expand-region.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; customizations 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
- ;; cu"stom-set-variables was added by Custom.
+ ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(global-linum-mode t)
  '(indent-tabs-mode nil)
+ '(org-agenda-files
+   '("c:/Users/Doerthous/Desktop/note/2021.org" "c:/Users/Doerthous/Desktop/note/高性能平台方案研发.org"))
+ '(org-log-into-drawer t)
+ '(org-log-note-headings
+   '((done . "CLOSING NOTE %t")
+     (state . "State %-12s from %-12S %T")
+     (note . "Note taken on %T")
+     (reschedule . "Rescheduled from %S on %t")
+     (delschedule . "Not scheduled, was %S on %t")
+     (redeadline . "New deadline from %S on %t")
+     (deldeadline . "Removed deadline, was %S on %t")
+     (refile . "Refiled on %t")
+     (clock-out . "")))
  '(package-selected-packages
-   (quote
-    (window-number yasnippet-snippets ## yasnippet smex expand-region company ggtags multiple-cursors spinner magit ht f dash-functional)))
+   '(ztree window-number yasnippet-snippets ## yasnippet smex expand-region company ggtags multiple-cursors spinner magit ht f dash-functional))
+ '(speedbar-show-unknown-files t)
  '(tab-width 4))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
