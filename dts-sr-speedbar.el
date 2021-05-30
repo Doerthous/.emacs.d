@@ -1,3 +1,7 @@
+(defun dts-disable-linum-in-sr-speedbar ()
+  (display-line-numbers-mode 0)
+  (message "debug ...")
+  )
 (eval-after-load 'sr-speedbar
   '(progn
      (message "%s" "doerthous sr-speedbar setting...")
@@ -9,6 +13,7 @@
       )
      ;; disable other window command to select sr-speedbar
      (setq sr-speedbar-skip-other-window-p t)
+     (add-hook 'speedbar-mode-hook 'dts-disable-linum-in-sr-speedbar)
      ))
 
 (require 'sr-speedbar)

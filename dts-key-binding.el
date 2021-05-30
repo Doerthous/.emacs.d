@@ -6,6 +6,7 @@
 (global-set-key (kbd "C-c }") 'hs-hide-all)
 (global-set-key (kbd "C-c c") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c m") 'set-mark-command)
+(global-set-key (kbd "C-c x") 'delete-trailing-whitespace)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; highest priority keymap

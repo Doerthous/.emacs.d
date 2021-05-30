@@ -76,7 +76,7 @@
  ;; If there is more than one, they won't work right.
  '(indent-tabs-mode nil)
  '(org-agenda-files
-   '("c:/Users/Doerthous/Desktop/note/2021.org" "c:/Users/Doerthous/Desktop/note/高性能平台方案研发.org"))
+   '("c:/Users/Doerthous/Desktop/note/高性能平台方案研发.org" "c:/Users/Doerthous/Desktop/note/2021-issue-tracking.org" "c:/Users/Doerthous/Desktop/note/2021.org"))
  '(org-log-into-drawer t)
  '(org-log-note-headings
    '((done . "CLOSING NOTE %t")
@@ -89,12 +89,22 @@
      (refile . "Refiled on %t")
      (clock-out . "")))
  '(package-selected-packages
-   '(ztree window-number yasnippet-snippets ## yasnippet smex expand-region company ggtags multiple-cursors spinner magit ht f dash-functional))
+   '(valign ztree window-number yasnippet-snippets ## yasnippet smex expand-region company ggtags multiple-cursors spinner magit ht f dash-functional))
+ '(powerline-default-separator 'utf-8)
+ '(powerline-utf-8-separator-left 9654)
+ '(powerline-utf-8-separator-right 9664)
  '(speedbar-show-unknown-files t)
- '(tab-width 4))
+ '(speedbar-use-images nil)
+ '(speedbar-use-imenu-flag nil)
+ '(tab-width 4)
+ '(window-numbering-mode-line nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(line-number ((t (:background "#0000" :inherit (shadow default)))))
+ '(line-number-current-line ((t (:foreground "green yellow" :background "#232526" :inherit line-number))))
+ '(powerline-inactive0 ((t (:foreground "#0000" :background "#0000"))))
+ '(powerline-inactive1 ((t (:inherit mode-line-inactive :foreground "#0000" :background "#0000"))))
+ '(powerline-inactive2 ((t (:inherit mode-line-inactive :foreground "#0000" :background "#0000")))))

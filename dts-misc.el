@@ -18,9 +18,15 @@
 (tool-bar-mode 0) ;; disable toolbar
 (menu-bar-mode 0) ;; disable menu bar
 (show-paren-mode t) ;; highlight braces
-(add-hook 'window-configuration-change-hook (lambda () (ruler-mode 1))) ;; display a ruler for column
+(add-hook 'window-configuration-change-hook (lambda () (ruler-mode 0))) ;; display a ruler for column
 (add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; full screen
-;;(set-frame-font "Microsoft YaHei Mono-12") ;; font
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Font settings
+;;   Noto Sans Mono
+;;   Source Code Pro
+(if (version< emacs-version "27.0")
+    (set-default-font "Source Code Pro" 11)
+  (set-frame-font "Source Code Pro" 11))
 (defalias 'yes-or-no-p 'y-or-n-p) ;; yes-or-no -> y-or-n
 (setq default-buffer-file-coding-system 'utf-8) ;; default coding system for new file
 (prefer-coding-system 'utf-8)

@@ -31,3 +31,5 @@
      ((t :background "#F92672")))
    `(company-scrollbar-bg
      ((t :background "#F8F8F0")))))
+
+(defvar dts-theme-green "#008000")

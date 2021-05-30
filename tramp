@@ -1,0 +1,10 @@
+;; -*- emacs-lisp -*- <21/05/30 21:15:39 c:/Users/Doerthous/Desktop/emacs/share/emacs/27.2/home/.emacs.d/tramp>
+;; Tramp connection history.  Don't change this file.
+;; Run `M-x tramp-cleanup-all-connections' instead.
+
+(((tramp-file-name "ssh" "pi" nil "192.168.1.5" nil nil nil)
+  nil)
+ ((tramp-file-name "sshx" "pi" nil "192.168.1.5" nil nil nil)
+  nil)
+ ((tramp-file-name "plink" "pi" nil "192.168.1.5" nil nil nil)
+  nil))

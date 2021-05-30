@@ -4,6 +4,7 @@
 ;;
 ;; Author: Nikolaj Schumacher <bugs * nschum de>
 ;; Version: 1.1.2
+;; Package-Version: 20160809.1810
 ;; Keywords: faces, matching
 ;; URL: http://nschum.de/src/emacs/window-numbering-mode/
 ;; Compatibility: GNU Emacs 22.x, GNU Emacs 23.x, GNU Emacs 24.x
@@ -81,11 +82,6 @@ This is called before automatic assignment begins.  The function should
 return a number to have it assigned to the current-window, nil otherwise."
   :group 'window-numbering
   :type 'function)
-
-(defcustom window-numbering-mode-line nil
-  "Control whether to display window number in the mode line."
-  :group 'window-numbering
-  :type 'boolean)
 
 (defconst window-numbering-mode-line-position 1
   "The position in the mode-line `window-numbering-mode' displays the number.")
@@ -209,14 +205,14 @@ windows to numbers."
       (unless window-numbering-table
         (save-excursion
           (setq window-numbering-table (make-hash-table :size 16))
-          (when window-numbering-mode-line window-numbering-install-mode-line)
+          (window-numbering-install-mode-line)
           (add-hook 'minibuffer-setup-hook 'window-numbering-update)
           (add-hook 'window-configuration-change-hook
                     'window-numbering-update)
           (dolist (frame (frame-list))
             (select-frame frame)
             (window-numbering-update))))
-    (when window-numbering-mode-line window-numbering-clear-mode-line)
+    (window-numbering-clear-mode-line)
     (remove-hook 'minibuffer-setup-hook 'window-numbering-update)
     (remove-hook 'window-configuration-change-hook
                  'window-numbering-update)
