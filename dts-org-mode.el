@@ -1,4 +1,4 @@
-(require 'org-sidebar)
+;;(require 'org-sidebar)
 
 ;;
 (defun dts-org-clock-in-hook ()
@@ -28,3 +28,7 @@
 (setq org-image-actual-width (/ (display-pixel-width) 3))
 (define-key org-mode-map "\M-q" 'toggle-truncate-lines)
 
+(org-babel-do-load-languages 'org-babel-load-languages
+			     '(
+			       (shell . t)
+			       ))

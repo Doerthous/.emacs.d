@@ -54,7 +54,6 @@
 ;;(load "~/.emacs.d/dts-c-mode.el")
 (load "~/.emacs.d/dts-key-binding.el")
 (load "~/.emacs.d/dts-theme.el")
-(load "~/.emacs.d/dts-misc.el")
 (load "~/.emacs.d/dts-org-mode.el")
 (load "~/.emacs.d/dts-sr-speedbar.el")
 (load "~/.emacs.d/dts-company.el")
@@ -65,6 +64,7 @@
 (load "~/.emacs.d/dts-smex.el")
 (load "~/.emacs.d/dts-whitespace.el")
 (load "~/.emacs.d/dts-expand-region.el")
+(load "~/.emacs.d/dts-misc.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; customizations 
