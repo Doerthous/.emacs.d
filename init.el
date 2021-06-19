@@ -64,6 +64,7 @@
 (load "~/.emacs.d/dts-smex.el")
 (load "~/.emacs.d/dts-whitespace.el")
 (load "~/.emacs.d/dts-expand-region.el")
+(load "~/.emacs.d/dts-pyim.el")
 (load "~/.emacs.d/dts-misc.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -74,15 +75,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(dired-dwim-target t)
  '(indent-tabs-mode nil)
  '(org-agenda-files
-   (quote
-    ("c:/Users/Doerthous/Desktop/note/高性能平台方案研发.org" "c:/Users/Doerthous/Desktop/note/2021-issue-tracking.org" "c:/Users/Doerthous/Desktop/note/2021.org")))
+   '("c:/Users/Doerthous/Desktop/note/高性能平台方案研发.org" "c:/Users/Doerthous/Desktop/note/2021-issue-tracking.org" "c:/Users/Doerthous/Desktop/note/2021.org"))
  '(org-log-into-drawer t)
  '(org-log-note-headings
-   (quote
-    ((done . "CLOSING NOTE %t")
+   '((done . "CLOSING NOTE %t")
      (state . "State %-12s from %-12S %T")
      (note . "Note taken on %T")
      (reschedule . "Rescheduled from %S on %t")
@@ -90,11 +88,10 @@
      (redeadline . "New deadline from %S on %t")
      (deldeadline . "Removed deadline, was %S on %t")
      (refile . "Refiled on %t")
-     (clock-out . ""))))
+     (clock-out . "")))
  '(package-selected-packages
-   (quote
-    (htmlize valign ztree window-number yasnippet-snippets ## yasnippet smex expand-region company ggtags multiple-cursors spinner magit ht f dash-functional)))
- '(powerline-default-separator (quote utf-8))
+   '(pyim-basedict pyim htmlize valign ztree window-number yasnippet-snippets ## yasnippet smex expand-region company ggtags multiple-cursors spinner magit ht f dash-functional))
+ '(powerline-default-separator 'utf-8)
  '(powerline-utf-8-separator-left 9654)
  '(powerline-utf-8-separator-right 9664)
  '(speedbar-show-unknown-files t)
