@@ -90,7 +90,7 @@
      (refile . "Refiled on %t")
      (clock-out . "")))
  '(package-selected-packages
-   '(pyim-basedict pyim htmlize valign ztree window-number yasnippet-snippets ## yasnippet smex expand-region company ggtags multiple-cursors spinner magit ht f dash-functional))
+   '(helm imenus pyim-basedict pyim htmlize valign ztree window-number yasnippet-snippets ## yasnippet smex expand-region company ggtags multiple-cursors spinner magit ht f dash-functional))
  '(powerline-default-separator 'utf-8)
  '(powerline-utf-8-separator-left 9654)
  '(powerline-utf-8-separator-right 9664)
