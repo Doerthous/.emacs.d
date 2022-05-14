@@ -66,7 +66,21 @@
 (load "~/.emacs.d/dts-expand-region.el")
 (load "~/.emacs.d/dts-pyim.el")
 (load "~/.emacs.d/dts-misc.el")
-
+(let (
+      (mu4epath 
+       (let ((mu4epaths (list
+                         "/usr/local/share/emacs/site-lisp/mu/mu4e"
+                         "/usr/local/share/emacs/site-lisp/mu4e")))
+         (catch 'break
+           (loop for i in mu4epaths
+                 do (if (file-directory-p i)
+                        (throw 'break i)))))))
+  (if mu4epath
+      (progn
+        (message (format "load mu4e from %s" mu4epath))
+        (add-to-list 'load-path mu4epath)
+        (require 'mu4e))
+    (message "mu4e not found.")))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; customizations 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -94,6 +108,7 @@
  '(powerline-default-separator 'utf-8)
  '(powerline-utf-8-separator-left 9654)
  '(powerline-utf-8-separator-right 9664)
+ '(send-mail-function 'mailclient-send-it)
  '(speedbar-show-unknown-files t)
  '(speedbar-use-images nil)
  '(speedbar-use-imenu-flag nil)
