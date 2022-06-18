@@ -49,11 +49,9 @@
 ;; (semantic-mode 1)
 
 
-
-
-;;(load "~/.emacs.d/dts-c-mode.el")
 (load "~/.emacs.d/dts-key-binding.el")
 (load "~/.emacs.d/dts-theme.el")
+(load "~/.emacs.d/dts-snippet.el")
 (load "~/.emacs.d/dts-org-mode.el")
 (load "~/.emacs.d/dts-sr-speedbar.el")
 (load "~/.emacs.d/dts-company.el")
@@ -66,6 +64,8 @@
 (load "~/.emacs.d/dts-expand-region.el")
 (load "~/.emacs.d/dts-pyim.el")
 (load "~/.emacs.d/dts-misc.el")
+(load "~/.emacs.d/dts-c-mode.el")
+(require 'hideshow-org)
 (let (
       (mu4epath 
        (let ((mu4epaths (list
@@ -81,6 +81,8 @@
         (add-to-list 'load-path mu4epath)
         (require 'mu4e))
     (message "mu4e not found.")))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; customizations 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
