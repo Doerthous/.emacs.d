@@ -1,3 +1,12 @@
+(defun dts/toggle-shell-window ()
+  "dts toggle shell window"
+  (interactive)
+  (let* ((buf (get-buffer "*shell*"))
+         (wnd (get-buffer-window buf)))
+    (if (null wnd)
+        (shell)
+      (delete-window wnd))))
+
 (global-set-key (kbd "C-c j") 'goto-line)
 (global-set-key (kbd "C-c i") 'open-init-file)
 (global-set-key (kbd "C-c [") 'hs-show-block)
@@ -7,6 +16,7 @@
 (global-set-key (kbd "C-c c") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c m") 'set-mark-command)
 (global-set-key (kbd "C-c x") 'delete-trailing-whitespace)
+(global-set-key (kbd "C-c s") 'dts/toggle-shell-window)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; highest priority keymap
