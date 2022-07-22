@@ -7,17 +7,16 @@
 ;; Copyright (C) 2008, 2009, Andy Stewart, all rights reserved.
 ;; Copyright (C) 2009, Peter Lunicks, all rights reversed.
 ;; Created: 2008
-;; Version: 20161025
-;; Package-Version: 20161025.831
+;; Version: 20210922
 ;; X-Original-Version: 0.1.10
-;; Last-Updated: 2016-10-25
+;; Last-Updated: 2021-09-22
 ;; URL: http://www.emacswiki.org/emacs/download/sr-speedbar.el
 ;; Keywords: speedbar, sr-speedbar.el
 ;; Compatibility: GNU Emacs 22 ~ GNU Emacs 25
 ;;
 ;; Features required by this library:
 ;;
-;;  `speedbar' `advice' `cl'
+;;  `speedbar' `advice' `cl-lib'
 ;;
 
 ;;; This file is NOT part of GNU Emacs
@@ -79,6 +78,32 @@
 ;;      M-x customize-group RET sr-speedbar RET
 
 ;;; Change log:
+;; * 21 July 2022:
+;;   * Doerthous <doerthous@gmail.com>
+;;     * Comment out defadvice of pop-to-window
+;;       When we have a file window with speedbar window opened, and try to
+;;       open a shell in a side-window (bottom). This defadvice will split the
+;;       file window vertically.
+;;
+;; * 04 July 2022:
+;;   * Doerthous <doerthous@gmail.com>
+;;     * Add support that allows speedbar window split from `selected-window'
+;;       or `frame-root-window'.
+;;     * define `sr-speedbar-use-frame-root-window'.
+;;
+;; * 22 Sep 2021:
+;;   * Vasilij Schneidermann <mail@vasilij.de>
+;;     * Fix cl deprecation warning
+;;
+;; * 07 Jan 2021:
+;;   * Jacob First <jacob.first@member.fsf.org>
+;;     * Fix inconsistent window selection when opening speedbar on the right side vs. on the left.
+;;
+;; * 16 Jun 2020:
+;;   * Bo Yao <icerove@gmail.com> (submitted by him on 16 Jul 2018 to the Emacs Orphanage mirror version at GitHub)
+;;      * Always open file in most recently selected window (the one before switching to
+;;        sr-speedbar).
+;;
 ;; * 25 Oct 2016:
 ;;   * Hong Xu <hong@topbug.net>
 ;;      * Fix compilation warning when `helm-alive-p' is not defined.
@@ -265,8 +290,6 @@
 (require 'speedbar)
 (require 'advice)
 (require 'cl-lib)
-(eval-when-compile
-  (require 'cl))
 
 ;;; Code:
 
@@ -313,6 +336,16 @@ the speedbar.
 
 Default is nil."
   :type 'boolean
+  :group 'sr-speedbar)
+
+(defcustom sr-speedbar-use-frame-root-window nil
+  "Open speedbar based on selected window or frame root window.
+If nil, the speedbar window will split from `selected-window'.
+Otherwise `frame-root-window'.
+Default is nil."
+  :type 'boolean
+  :set (lambda (symbol value)
+         (set symbol value))
   :group 'sr-speedbar)
 
 (if (not (fboundp 'ad-advised-definition-p))
@@ -503,37 +536,28 @@ Otherwise return nil."
 
 (defun sr-speedbar-get-window ()
   "Get `sr-speedbar' window."
-  (let ((current-window (selected-window))
-        ;; Get split new window.
-        (new-window (split-window
-                     (selected-window)
-                     (if sr-speedbar-right-side
-                         (- (sr-speedbar-current-window-take-width) sr-speedbar-width)
-                       sr-speedbar-width)
-                     t)))
-    ;; Select split window.
-    (setq sr-speedbar-window
-          (if sr-speedbar-right-side
-              ;; Select right window when `sr-speedbar-right-side' is enable.
-              new-window
-            ;; Otherwise select left widnow.
-            current-window))))
+  (setq sr-speedbar-window
+        (split-window (if sr-speedbar-use-frame-root-window
+                          (frame-root-window)
+                        (selected-window))
+                      (- sr-speedbar-width)
+                      (if sr-speedbar-right-side 'right 'left))))
 
 (defun sr-speedbar-before-visiting-file-hook ()
   "Function that hook `speedbar-before-visiting-file-hook'."
-  (select-window (previous-window)))
+  (select-window (get-mru-window)))
 
 (defun sr-speedbar-before-visiting-tag-hook ()
   "Function that hook `speedbar-before-visiting-tag-hook'."
-  (select-window (previous-window)))
+  (select-window (get-mru-window)))
 
 (defun sr-speedbar-visiting-file-hook ()
   "Function that hook `speedbar-visiting-file-hook'."
-  (select-window (previous-window)))
+  (select-window (get-mru-window)))
 
 (defun sr-speedbar-visiting-tag-hook ()
   "Function that hook `speedbar-visiting-tag-hook'."
-  (select-window (previous-window)))
+  (select-window (get-mru-window)))
 
 (defun sr-speedbar-kill-buffer-hook ()
   "Function that hook `kill-buffer-hook'."
@@ -579,9 +603,9 @@ If WINDOW is nil, get current window."
     (walk-windows
      (lambda (w)
        (with-selected-window w
-         (incf window-number)
+         (cl-incf window-number)
          (if (window-dedicated-p w)
-             (incf dedicated-window-number)))))
+             (cl-incf dedicated-window-number)))))
     (if (and (> dedicated-window-number 0)
              (= (- window-number dedicated-window-number) 1))
         t nil)))
@@ -615,26 +639,26 @@ Use `delete-window' delete `sr-speedbar' window have same effect as `sr-speedbar
   ;; Remember window width before deleted.
   (sr-speedbar-remember-window-width))
 
-(defadvice pop-to-buffer (before sr-speedbar-pop-to-buffer-advice activate)
-  "This advice is to fix `pop-to-buffer' problem with dedicated window.
-Default, function `display-buffer' can't display buffer in select window
-if current window is `dedicated'.
+;; (defadvice pop-to-buffer (before sr-speedbar-pop-to-buffer-advice activate)
+;;   "This advice is to fix `pop-to-buffer' problem with dedicated window.
+;; Default, function `display-buffer' can't display buffer in select window
+;; if current window is `dedicated'.
 
-So function `display-buffer' conflict with `sr-speedbar' window, because
-`sr-speedbar' window is `dedicated' window.
+;; So function `display-buffer' conflict with `sr-speedbar' window, because
+;; `sr-speedbar' window is `dedicated' window.
 
-That is to say, when current frame just have one `non-dedicated' window,
-any functions that use `display-buffer' can't split windows
-to display buffer, even option `pop-up-windows' is enable.
+;; That is to say, when current frame just have one `non-dedicated' window,
+;; any functions that use `display-buffer' can't split windows
+;; to display buffer, even option `pop-up-windows' is enable.
 
-And the example function that can occur above problem is `pop-to-buffer'."
-  (when (and pop-up-windows                            ;`pop-up-windows' is enable
-             (sr-speedbar-window-dedicated-only-one-p) ;just have one `non-dedicated' window
-             (sr-speedbar-window-exist-p sr-speedbar-window)
-             (not (sr-speedbar-window-p)) ;not in `sr-speedbar' window
-             (not (bound-and-true-p helm-alive-p)))
-    (split-window-vertically)
-    (windmove-down)))
+;; And the example function that can occur above problem is `pop-to-buffer'."
+;;   (when (and pop-up-windows                            ;`pop-up-windows' is enable
+;;              (sr-speedbar-window-dedicated-only-one-p) ;just have one `non-dedicated' window
+;;              (sr-speedbar-window-exist-p sr-speedbar-window)
+;;              (not (sr-speedbar-window-p)) ;not in `sr-speedbar' window
+;;              (not (bound-and-true-p helm-alive-p)))
+;;     (split-window-vertically)
+;;     (windmove-down)))
 
 (defadvice other-window (after sr-speedbar-other-window-advice)
   "Default, can use `other-window' select window in cyclic ordering of windows.

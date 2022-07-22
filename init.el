@@ -48,39 +48,25 @@
 ;; (global-semantic-idle-scheduler-mode 1)
 ;; (semantic-mode 1)
 
-
 (load "~/.emacs.d/dts-key-binding.el")
 (load "~/.emacs.d/dts-theme.el")
 (load "~/.emacs.d/dts-snippet.el")
-(load "~/.emacs.d/dts-org-mode.el")
-(load "~/.emacs.d/dts-sr-speedbar.el")
-(load "~/.emacs.d/dts-company.el")
-(load "~/.emacs.d/dts-transpose-frame.el")
-(load "~/.emacs.d/dts-powerline.el")
-(load "~/.emacs.d/dts-window-numbering.el")
-(load "~/.emacs.d/dts-linum.el")
-(load "~/.emacs.d/dts-smex.el")
-(load "~/.emacs.d/dts-whitespace.el")
-(load "~/.emacs.d/dts-expand-region.el")
-(load "~/.emacs.d/dts-pyim.el")
-(load "~/.emacs.d/dts-misc.el")
+;(load "~/.emacs.d/dts-org-mode.el")
+;(load "~/.emacs.d/dts-sr-speedbar.el")
+;(load "~/.emacs.d/dts-company.el")
+;(load "~/.emacs.d/dts-transpose-frame.el")
+;(load "~/.emacs.d/dts-powerline.el")
+;(load "~/.emacs.d/dts-window-numbering.el")
+;(load "~/.emacs.d/dts-linum.el")
+;(load "~/.emacs.d/dts-smex.el")
+;(load "~/.emacs.d/dts-whitespace.el")
+;(load "~/.emacs.d/dts-expand-region.el")
+;(load "~/.emacs.d/dts-pyim.el")
+;(load "~/.emacs.d/dts-misc.el")
 (load "~/.emacs.d/dts-c-mode.el")
+(load "~/.emacs.d/dts-conf.el")
 (require 'hideshow-org)
-(let (
-      (mu4epath 
-       (let ((mu4epaths (list
-                         "/usr/local/share/emacs/site-lisp/mu/mu4e"
-                         "/usr/local/share/emacs/site-lisp/mu4e")))
-         (catch 'break
-           (loop for i in mu4epaths
-                 do (if (file-directory-p i)
-                        (throw 'break i)))))))
-  (if mu4epath
-      (progn
-        (message (format "load mu4e from %s" mu4epath))
-        (add-to-list 'load-path mu4epath)
-        (require 'mu4e))
-    (message "mu4e not found.")))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

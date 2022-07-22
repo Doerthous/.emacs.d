@@ -3,7 +3,7 @@
 
 (defvar dts-command-hash (make-hash-table :test 'equal))
 
-(defun dts-comand (cmd)
+(defun dts-command (cmd)
   (interactive "sCommand: ")
   (let ((cmd (gethash cmd dts-command-hash)))
     (when cmd (funcall cmd))))
