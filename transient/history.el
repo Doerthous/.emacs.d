@@ -7,5 +7,7 @@
   ("--no-ext-diff"))
  (magit-dispatch nil)
  (magit-ediff nil)
+ (magit-fetch nil)
  (magit-patch-apply nil)
+ (magit-pull nil)
  (magit-push nil))

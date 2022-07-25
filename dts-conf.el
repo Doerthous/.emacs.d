@@ -1,14 +1,119 @@
 ;;; dts-pkgconf.el --- This is used for configuration of other packages
 ;;; Commentary:
 ;;; Code:
-;;;; c-mode
+;;;; Third Party Packages
+;;;;; c-mode
+;;;;;; misc
+(defun dts-command-c-lisence ()
+    (interactive)
+  (save-excursion
+    (beginning-of-buffer)
+    (let ((dts-c-mit-lisence-template
+           "\
+/*******************************************************************************
+
+  Copyright (c) YEAR
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the “Software”), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+  2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+  Author: doerthous <doerthous@gmail.com>
+
+*******************************************************************************/
+
+"))
+      (insert
+       (replace-regexp-in-string "YEAR" (format-time-string "%Y")
+                                 dts-c-mit-lisence-template)))))
+
+(defun dts-command-c-header-protect-macro ()
+    (interactive)
+    (save-excursion
+      (beginning-of-buffer)
+      (let ((macro
+             (concat
+              (upcase
+               (replace-regexp-in-string
+                "[.|-]" "_" (file-relative-name (buffer-file-name)))) "_")))
+        (insert (concat "#ifndef " macro))
+        (newline)
+        (insert (concat "#define " macro))
+        (newline)
+        (newline)
+        (newline)
+        (newline)
+        (insert (concat "#endif // " macro)))))
+
+
+;; cc-mode style
+(c-add-style "dts-style"
+             '((c-basic-offset . 4)     ; Guessed value
+               (c-offsets-alist
+                (block-close . 0)       ; Guessed value
+                (defun-block-intro . +) ; Guessed value
+                (defun-close . 0)       ; Guessed value
+                (defun-open . 0)        ; Guessed value
+                (statement . 0)         ; Guessed value
+                (statement-block-intro . +) ; Guessed value
+                (topmost-intro . 0)         ; Guessed value
+                (case-label . 4) ;
+;                (c . doerthous-c-lineup-C-comments)
+                )
+               ))
+
+
+;;(add-hook 'c-mode-hook 'hs-minor-mode)
+(add-hook 'c-mode-hook 'company-mode)
+(add-hook 'c-mode-hook 'ggtags-mode)
+;;(add-hook 'c-mode-hook 'yas-minor-mode)
+
+(add-hook 'c-mode-hook 'doerthous-c-mode-hook)
+(defun doerthous-c-mode-hook()
+  ""
+  ;; (set (make-local-variable 'company-backends)
+  ;;      '(company-dabbrev company-gtags company-yasnippet))
+  ;; (local-set-key [C-tab] 'company-gtags)
+  (c-set-style "dts-style")
+  ;; (local-set-key (kbd "C-c C-r") 'doerthous-c-run)
+  (puthash "lsc" 'dts-command-c-lisence dts-command-hash)
+  (puthash "hpm" 'dts-command-c-header-protect-macro dts-command-hash)
+  (puthash "cfh" '(lambda () (progn
+                               (dts-command-c-header-protect-macro)
+                               (dts-command-c-lisence)))
+           dts-command-hash))
+
+;;;;;; outline cycle
 (add-hook 'c-mode-hook 'outline-minor-mode)
 (defvar dts/c-outline-regexp "/[/]+")
 (defun dts/c-outline-level ()
   "DTS c mode `outline-level' function."
   (- (match-end 0) (match-beginning 0)))
 
-;;;; company-mode
+;;;;; cc-mode
+;(require 'cc-mode)
+
+;;;;; company-mode
 
 (require 'company)
 (global-company-mode 1)
@@ -24,7 +129,50 @@
 (add-to-list 'company-backends 'company-c-headers)
 (add-to-list 'company-c-headers-path-system "/usr/include")
 
-;;;; expand-region
+;;;;; dashboard
+(require 'dashboard)
+(dashboard-setup-startup-hook)
+(setq dashboard-items '((recents  . 5)
+                        (bookmarks . 5)
+                        (projects . 5)
+                        (agenda . 5)
+                        (registers . 5)))
+;;;;; eamcs-lisp-mode
+(add-hook 'emacs-lisp-mode-hook 'outline-minor-mode)
+
+;;;;; erc-sasl
+;; Require ERC-SASL package
+(require 'erc)
+(require 'erc-sasl)
+
+;; Add SASL server to list of SASL servers (start a new list, if it did not exist)
+(add-to-list 'erc-sasl-server-regexp-list "irc\\.libera\\.chat")
+
+;; Redefine/Override the erc-login() function from the erc package, so that
+;; it now uses SASL
+(defun erc-login ()
+  "Perform user authentication at the IRC server. (PATCHED)"
+  (erc-log (format "login: nick: %s, user: %s %s %s :%s"
+           (erc-current-nick)
+           (user-login-name)
+           (or erc-system-name (system-name))
+           erc-session-server
+           erc-session-user-full-name))
+  (if erc-session-password
+      (erc-server-send (format "PASS %s" erc-session-password))
+    (message "Logging in without password"))
+  (when (and (featurep 'erc-sasl) (erc-sasl-use-sasl-p))
+    (erc-server-send "CAP REQ :sasl"))
+  (erc-server-send (format "NICK %s" (erc-current-nick)))
+  (erc-server-send
+   (format "USER %s %s %s :%s"
+       ;; hacked - S.B.
+       (if erc-anonymous-login erc-email-userid (user-login-name))
+       "0" "*"
+       erc-session-user-full-name))
+  (erc-update-mode-line))
+
+;;;;; expand-region
 
 ;; expand-region
 ;; use C-= to expand region
@@ -34,10 +182,18 @@
      (global-set-key (kbd "C-c =") 'er/expand-region)))
 (require 'expand-region)
 
-;;;; eamcs-lisp-mode
-(add-hook 'emacs-lisp-mode-hook 'outline-minor-mode)
 
-;;;; linum-mode
+;;;;; git-gutter
+;;(require 'git-gutter)
+;;(global-git-gutter-mode t)
+;;(git-gutter:linum-setup)
+
+;;;;; hideshow
+(require 'hideshow-org)
+;;;;; ido
+;;(require 'ido)
+;;(ido-mode nil)
+;;;;; linum-mode
 ;; after emacs 26.0, emacs has provide a display-line-numbers-mode to show
 ;; line number.
 (if (version< emacs-version "26.0")
@@ -55,7 +211,7 @@
     (global-set-key (kbd "C-c l") 'display-line-numbers-mode)
     (global-display-line-numbers-mode t)))
 
-;;;; mu4e
+;;;;; mu4e
 
 (let (
       (mu4epath
@@ -74,11 +230,16 @@
         (require 'mu4e))
     (message "mu4e not found.")))
 
-;;;; org-mode
+;;;;; multiple-cursors
+;; (require 'multiple-cursors)
+;; (global-set-key (kbd "C-S-<mouse-1>") 'mc/toggle-cursor-on-click)
+
+;;;;; org-mode
 
 ;;(require 'org-sidebar)
 
 ;;
+;;;;;; misc
 (defun dts-org-clock-in-hook ()
   "Doerthous org mode hook. For insert a active timestamp when org-clock-in"
   (let* ((col (string-match "CLOCK:" (thing-at-point 'line t))))
@@ -130,7 +291,40 @@
                              'dts-org-insert-trace-id)))
 
 
-;;;; outline-minor-mode
+
+;;;;;; org capture
+(require 'org-protocol)
+(setq org-default-notes-file (concat org-directory "/notes.org"))
+(defun dts/org-insert-create-time ()
+  "Insert timestamp to CREATE_TIME property"
+  (interactive)
+  (org-set-property "CREATE_TIME" (format-time-string "[%Y-%m-%d %a %H:%M]" (current-time))))
+(add-hook 'org-capture-mode-hook #'org-id-get-create)
+(add-hook 'org-capture-mode-hook #'dts/org-insert-create-time)
+(setq org-capture-templates
+      '(("j" "Journal" entry (file+datetree "~/org/journal.org")
+         "* %?\n%i\n%a" :empty-lines 1)))
+
+;;;;; org-roam
+
+(setq org-roam-directory (file-truename "~/notes"))
+(org-roam-db-autosync-mode) ; 同步cache数据库
+
+(add-to-list 'display-buffer-alist
+             '("\\*org-roam\\*"
+               (display-buffer-in-side-window)
+               (side . right)
+               (slot . 0)
+               (window-width . 0.3)
+               (window-parameters . ((no-other-window . t)
+                                     (no-delete-other-windows . t)))))
+(setq org-roam-mode-sections
+      (list #'org-roam-backlinks-section
+            #'org-roam-reflinks-section
+            ;; #'org-roam-unlinked-references-section
+            ))
+
+;;;;; outline-minor-mode
 ;; local bind key for `outline-minor-mode'
 
 (defvar dts/tag-cmd nil "TAG command, saved for chain call")
@@ -172,6 +366,7 @@ check `current-global-map'.
       (progn
         (setq outline-regexp dts/c-outline-regexp)
         (setq outline-level 'dts/c-outline-level)))
+  (setq outline-minor-mode-cycle t)
   (local-set-key (kbd "C-c C-c") 'outline-hide-entry)
   (local-set-key (kbd "C-c C-e") 'outline-show-entry)
   (local-set-key (kbd "C-c C-d") 'outline-hide-subtree)
@@ -184,14 +379,14 @@ check `current-global-map'.
   (local-set-key (kbd "C-c C-q") 'outline-hide-sublevels)
   (local-set-key (kbd "C-c C-o") 'outline-hide-other)
   (local-set-key (kbd "M-n") 'outline-next-visible-heading)
-  (local-set-key (kbd "M-p") 'outline-previous-visible-heading)
+  (local-set-key (kbd "M-p") 'outline-previous-visible-heading))
   ;; save current command bound to TAB
-  (dts/save-tag-cmd)
-  (local-set-key (kbd "TAB") 'dts/outline-minor-mode-tag-toggle))
+  ;(dts/save-tag-cmd)
+  ;(local-set-key (kbd "TAB") 'dts/outline-minor-mode-tag-toggle))
 
 (add-hook 'outline-minor-mode-hook 'dts/outline-minor-mode-hook)
 
-;;;; powerline
+;;;;; powerline
 
 (setq mode-line-format nil)
 (eval-after-load 'powerline
@@ -278,7 +473,22 @@ check `current-global-map'.
 (require 'powerline)
 (dts-powerline-theme)
 
-;;;; semx
+;;;;; projectile
+(projectile-mode +1)
+;; Recommended keymap prefix on Windows/Linux
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+;;;;; pyim
+;; (setq default-input-method "pyim")
+;; (global-set-key (kbd "C-\\") 'toggle-input-method)
+;; (setq pyim-default-scheme 'quanpin)
+;; (pyim-basedict-enable)
+
+;;;;; semantic
+;; (require 'semantic)
+;; (global-semanticdb-minor-mode 1)
+;; (global-semantic-idle-scheduler-mode 1)
+;; (semantic-mode 1)
+;;;;; semx
 
 (eval-after-load 'smex
   '(progn
@@ -290,7 +500,7 @@ check `current-global-map'.
 
 (require 'smex)
 
-;;;; sr-speedbar-mode
+;;;;; sr-speedbar-mode
 
 (defun dts-disable-linum-in-sr-speedbar ()
   (display-line-numbers-mode 0)
@@ -311,7 +521,11 @@ check `current-global-map'.
 
 (require 'sr-speedbar)
 
-;;;; transpose-theme
+;;;;; tabbar
+;;(require 'tabbar)
+;;(tabbar-mode 1)
+
+;;;;; transpose-theme
 
 ;; transpose-frame
 ;; function: transpose-frame
@@ -341,8 +555,8 @@ check `current-global-map'.
 ;;        +-------------------------+      +-------------------------+
 (require 'transpose-frame)
 
-;;;; whitespace
-;;;; window-numbering
+;;;;; whitespace
+;;;;; window-numbering
 
 ;; window-numbering
 ;; use M-1, M-2, ..., M-0 to index window
@@ -355,7 +569,50 @@ check `current-global-map'.
 
 (require 'window-numbering)
 
-;;;; Misc configuration
+;;;;; windmove
+(global-set-key (kbd "M-<left>") 'windmove-left)
+(global-set-key (kbd "M-<right>") 'windmove-right)
+(global-set-key (kbd "M-<up>") 'windmove-up)
+(global-set-key (kbd "M-<down>") 'windmove-down)
+;;;;; yasnippet
+;; (require 'yasnippet)
+;; (yas-global-mode 1)
+;; (setq yas-triggers-in-field t)
+;;;; Theme
+;;(setq molokai-theme-kit t)
+(load-theme 'molokai t)
+(deftheme monokai-overrides) ;; set style for other plugins with monokai theme
+(let ((class '((class color) (min-colors 257)))
+      (terminal-class '((class color) (min-colors 89))))
+  (custom-theme-set-faces
+   'monokai-overrides
+   ;; Company tweaks.
+   `(company-tooltip
+     ((t :foreground "#1B1D1E"
+         :background "#F8F8F0"
+         :underline t)))
+   `(company-tooltip-selection
+     ((t :background "#349B8D"
+         :foreground "#F8F8F0")))
+   `(company-tooltip-annotation
+     ((t :inherit company-tooltip)))
+   `(company-tooltip-annotation-selection
+     ((t :inherit company-tooltip-selection)))
+   `(company-preview
+     ((t :inherit company-tooltip-selection)))
+   `(company-preview-common
+     ((t :inherit company-tooltip)))
+   `(company-tooltip-search
+     ((t :background "#349B8D"
+         :foreground "#F8F8F0")))
+   `(company-scrollbar-fg
+     ((t :background "#F92672")))
+   `(company-scrollbar-bg
+     ((t :background "#F8F8F0")))))
+
+(defvar dts-theme-green "#008000")
+
+;;;; Misc Configuration
 
 ;;;;; Emacs Feature
 
@@ -400,20 +657,109 @@ check `current-global-map'.
 (setq fit-window-to-buffer-horizontally t)
 (setq window-resize-pixelwise t)
 
-(setq
- display-buffer-alist
- `(("\\*Buffer List\\*" display-buffer-in-side-window
-    (side . top) (slot . 0) (window-height . fit-window-to-buffer)
-    (preserve-size . (nil . t)) ,parameters)
-   ("\\*Tags List\\*" display-buffer-in-side-window
-    (side . right) (slot . 0) (window-width . fit-window-to-buffer)
-    (preserve-size . (t . nil)) ,parameters)
-   ("\\*\\(?:help\\|grep\\|Completions\\|Messages\\)\\*"
-    display-buffer-in-side-window
-    (side . bottom) (slot . -1) (preserve-size . (nil . t))
-    ,parameters)
-   ("\\*\\(?:shell\\|compilation\\)\\*" display-buffer-in-side-window
-    (side . bottom) (slot . 1) (preserve-size . (nil . t))
-    ,parameters)))
+(add-to-list 'display-buffer-alist
+             `("\\*Buffer List\\*" display-buffer-in-side-window
+               (side . top) (slot . 0) (window-height . fit-window-to-buffer)
+               (preserve-size . (nil . t)) ,parameters))
+(add-to-list 'display-buffer-alist
+             `("\\*Tags List\\*" display-buffer-in-side-window
+               (side . right) (slot . 0) (window-width . fit-window-to-buffer)
+               (preserve-size . (t . nil)) ,parameters))
+(add-to-list 'display-buffer-alist
+             `("\\*\\(?:help\\|grep\\|Completions\\|Messages\\)\\*"
+               display-buffer-in-side-window
+               (side . bottom) (slot . -1) (preserve-size . (nil . t))
+    ,parameters))
+(add-to-list 'display-buffer-alist
+             `("\\*\\(?:shell\\|compilation\\)\\*"
+               display-buffer-in-side-window
+               (side . bottom) (slot . 1) (preserve-size . (nil . t))
+               ,parameters))
+
+;;;;; Advice
+(defadvice save-buffer (before dts/delete-trailing-whitespace-before-save activate)
+  "Delete trailing whitespace before save buffer"
+  (delete-trailing-whitespace))
+;;;;; Keybindings
+(global-set-key (kbd "C-c j") 'goto-line)
+(global-set-key (kbd "C-c i") 'open-init-file)
+(global-set-key (kbd "C-c [") 'hs-show-block)
+(global-set-key (kbd "C-c ]") 'hs-hide-block)
+(global-set-key (kbd "C-c {") 'hs-show-all)
+(global-set-key (kbd "C-c }") 'hs-hide-all)
+(global-set-key (kbd "C-c c") 'comment-or-uncomment-region)
+(global-set-key (kbd "C-c m") 'set-mark-command)
+(global-set-key (kbd "C-c x") 'delete-trailing-whitespace)
+;;;; DTS Minor Mode
+
+;;;;; DTS Commands
+(defvar dts-command-hash (make-hash-table :test 'equal))
+(defun dts-command (cmd)
+  (interactive "sCommand: ")
+  (let ((cmd (gethash cmd dts-command-hash)))
+    (when cmd (funcall cmd))))
+;;;;; misc
+(defun dts-toggle-shell-window ()
+  "dts toggle shell window"
+  (interactive)
+  (let ((buf (get-buffer "*shell*")))
+    (if buf
+        (let ((wnd (get-buffer-window buf)))
+          (if (null wnd)
+              (shell)
+            (delete-window wnd)))
+      (shell))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; highest priority keymap
+;;
+;; How to use:
+;;   1. C-c k enable/disable this mode
+;;   2. when enable, the following keymaps have the highest priority
+(defvar dts-keymap (make-sparse-keymap))
+(defvar dts-hs-toggle-flag nil)
+(defun dts-hs-toggle (&optional start end)
+  (interactive "r")
+  ;;(hs-org/minor-mode)
+  ;;(hide-ifdef-mode)
+  (let* ((dts-hs-range (get-text-property 450 'dts-hs-range)))
+    (when (null dts-hs-range)
+        (message "hide ifdef")
+        (add-text-properties start end (list 'dts-hs-range (list start end)))
+        (hide-ifdef-block))
+    (when (not (null dts-hs-range))
+          (if (remove-text-properties
+               (nth 0 dts-hs-range)
+               (nth 1 dts-hs-range)
+               '(dts-hs-range nil))
+              (message "remove dts-hs-range (%d %d)"
+                       (nth 0 dts-hs-range) (nth 1 dts-hs-range)))
+          (message "show ifdef")
+          (call-interactively 'show-ifdef-block)))
+  ;;(hs-org/hideshow (kbd "C-c d e f g"))
+)
+
+;;
+(progn
+  (define-key dts-keymap (kbd "C-z")  'repeat)
+  (define-key dts-keymap (kbd "S-C-<left>")  'shrink-window-horizontally)
+  (define-key dts-keymap (kbd "S-C-<right>") 'enlarge-window-horizontally)
+  (define-key dts-keymap (kbd "S-C-<down>")  'shrink-window)
+  (define-key dts-keymap (kbd "S-C-<up>")    'enlarge-window)
+  (define-key dts-keymap (kbd "TAB") '(lambda () (interactive) (dts-hs-toggle (kbd "TAB"))))
+  (define-key dts-keymap (kbd "C-c d e f g") '(lambda () (interactive) (message "dummy")))
+  (define-key dts-keymap (kbd "s") #'dts-toggle-shell-window)
+  (define-key dts-keymap (kbd "t w") #'window-toggle-side-windows)
+  (define-key dts-keymap (kbd "q") #'dts-keymap-mode))
+(define-minor-mode dts-keymap-mode
+  "A minor mode so that global key settings override annoying major modes."
+  :global t
+  :lighter " dts-keys"
+  :keymap dts-keymap)
+(add-to-list 'emulation-mode-map-alists '(dts-keymap-mode . dts-keymap))
+(defun dts-keymap-mode-minibuffer-disable-hook () ;; disable when in minibuffer
+  (dts-keymap-mode 0))
+(add-hook 'minibuffer-setup-hook 'dts-keymap-mode-minibuffer-disable-hook)
+(global-set-key (kbd "C-c k") 'dts-keymap-mode) ;; toggle dts-keymap-mode
 
 ;;; dts-pkgconf.el ends here

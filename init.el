@@ -12,65 +12,10 @@
 ;; (add-to-list 'package-archives '("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/"))
 (package-initialize)
 
-
-
-
-
-;; multiple-cursors
-;; (require 'multiple-cursors)
-;; (global-set-key (kbd "C-S-<mouse-1>") 'mc/toggle-cursor-on-click)
-
-
-
-;; ido
-;; (require 'ido)
-;; (ido-mode t)
-;; yasnippet
-;; (require 'yasnippet)
-;; (yas-global-mode 1)
-;; (setq yas-triggers-in-field t)
-
-;; cc-mode
-;(require 'cc-mode)
-
-
-
-
-;; tabbar
-;;(require 'tabbar)
-;;(tabbar-mode 1)
-;; git-gutter
-;;(require 'git-gutter)
-;;(global-git-gutter-mode t)
-;;(git-gutter:linum-setup)
-;; (require 'semantic)
-;; (global-semanticdb-minor-mode 1)
-;; (global-semantic-idle-scheduler-mode 1)
-;; (semantic-mode 1)
-
-(load "~/.emacs.d/dts-key-binding.el")
-(load "~/.emacs.d/dts-theme.el")
-(load "~/.emacs.d/dts-snippet.el")
-;(load "~/.emacs.d/dts-org-mode.el")
-;(load "~/.emacs.d/dts-sr-speedbar.el")
-;(load "~/.emacs.d/dts-company.el")
-;(load "~/.emacs.d/dts-transpose-frame.el")
-;(load "~/.emacs.d/dts-powerline.el")
-;(load "~/.emacs.d/dts-window-numbering.el")
-;(load "~/.emacs.d/dts-linum.el")
-;(load "~/.emacs.d/dts-smex.el")
-;(load "~/.emacs.d/dts-whitespace.el")
-;(load "~/.emacs.d/dts-expand-region.el")
-;(load "~/.emacs.d/dts-pyim.el")
-;(load "~/.emacs.d/dts-misc.el")
-(load "~/.emacs.d/dts-c-mode.el")
 (load "~/.emacs.d/dts-conf.el")
-(require 'hideshow-org)
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; customizations 
+;; customizations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -78,8 +23,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(indent-tabs-mode nil)
- '(org-agenda-files
-   '("c:/Users/Doerthous/Desktop/note/高性能平台方案研发.org" "c:/Users/Doerthous/Desktop/note/2021-issue-tracking.org" "c:/Users/Doerthous/Desktop/note/2021.org"))
+ '(org-agenda-files nil)
  '(org-log-into-drawer t)
  '(org-log-note-headings
    '((done . "CLOSING NOTE %t")
@@ -92,10 +36,14 @@
      (refile . "Refiled on %t")
      (clock-out . "")))
  '(package-selected-packages
-   '(helm imenus pyim-basedict pyim htmlize valign ztree window-number yasnippet-snippets ## yasnippet smex expand-region company ggtags multiple-cursors spinner magit ht f dash-functional))
+   '(org-ql tabbar dashboard org-roam-ui org-roam projectile helm imenus pyim-basedict pyim htmlize valign ztree window-number yasnippet-snippets ## yasnippet smex expand-region company ggtags multiple-cursors spinner magit ht f dash-functional))
  '(powerline-default-separator 'utf-8)
  '(powerline-utf-8-separator-left 9654)
  '(powerline-utf-8-separator-right 9664)
+ '(safe-local-variable-values
+   '((org-roam-db-location . "./journal-roam.db")
+     (org-roam-db-location . "./rog-roam.db")
+     (org-roam-directory . ".")))
  '(send-mail-function 'mailclient-send-it)
  '(speedbar-show-unknown-files t)
  '(speedbar-use-images nil)
