@@ -23,7 +23,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(indent-tabs-mode nil)
- '(org-agenda-files nil)
+ '(org-agenda-files
+   '("~/org/journal.org"))
  '(org-log-into-drawer t)
  '(org-log-note-headings
    '((done . "CLOSING NOTE %t")
@@ -57,6 +58,7 @@
  ;; If there is more than one, they won't work right.
  '(line-number ((t (:background "#0000" :inherit (shadow default)))))
  '(line-number-current-line ((t (:foreground "green yellow" :background "#232526" :inherit line-number))))
+ '(org-level-4 ((t (:inherit outline-8 :extend nil))))
  '(powerline-inactive0 ((t (:foreground "#0000" :background "#0000"))))
  '(powerline-inactive1 ((t (:inherit mode-line-inactive :foreground "#0000" :background "#0000"))))
  '(powerline-inactive2 ((t (:inherit mode-line-inactive :foreground "#0000" :background "#0000")))))

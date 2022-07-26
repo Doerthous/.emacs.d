@@ -288,9 +288,11 @@
   (insert (format-time-string "%Y%m%d%I%M%S" (current-time))))
 (add-hook 'org-mode-hook (lambda ()
                            (define-key org-mode-map (kbd "C-c t")
-                             'dts-org-insert-trace-id)))
-
-
+                             #'dts-org-insert-trace-id)
+                           (define-key org-mode-map (kbd "C-x t s")
+                             #'org-toggle-narrow-to-subtree)
+                           (define-key org-mode-map (kbd "C-x c")
+                             #'org-capture)))
 
 ;;;;;; org capture
 (require 'org-protocol)
@@ -305,6 +307,11 @@
       '(("j" "Journal" entry (file+datetree "~/org/journal.org")
          "* %?\n%i\n%a" :empty-lines 1)))
 
+;;;;;; org agenda custom view
+(setq org-agenda-custom-commands
+      '(("d" tags-tree "+日报")
+        ("D" tags "+日报")
+        ))
 ;;;;; org-roam
 
 (setq org-roam-directory (file-truename "~/notes"))
@@ -690,6 +697,8 @@ check `current-global-map'.
 (global-set-key (kbd "C-c c") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c m") 'set-mark-command)
 (global-set-key (kbd "C-c x") 'delete-trailing-whitespace)
+(global-set-key (kbd "C-c c") #'org-capture)
+(global-set-key (kbd "C-c a") #'org-agenda)
 ;;;; DTS Minor Mode
 
 ;;;;; DTS Commands
