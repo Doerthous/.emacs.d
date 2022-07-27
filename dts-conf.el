@@ -289,10 +289,9 @@
 (add-hook 'org-mode-hook (lambda ()
                            (define-key org-mode-map (kbd "C-c t")
                              #'dts-org-insert-trace-id)
-                           (define-key org-mode-map (kbd "C-x t s")
-                             #'org-toggle-narrow-to-subtree)
-                           (define-key org-mode-map (kbd "C-x c")
-                             #'org-capture)))
+                           (define-key org-mode-map (kbd "M-o M-n")
+                             #'org-toggle-narrow-to-subtree)))
+
 
 ;;;;;; org capture
 (require 'org-protocol)
@@ -306,12 +305,32 @@
 (setq org-capture-templates
       '(("j" "Journal" entry (file+datetree "~/org/journal.org")
          "* %?\n%i\n%a" :empty-lines 1)))
+(global-set-key (kbd "C-c c") #'org-capture)
+;; id-style link
+(require 'org-id)
+(setq org-id-link-to-org-use-id t)
+;; (add-to-list 'org-link-parameters '("dts/org-capture-store-link"
+;;                                     :store dts/org-capture-store-link))
+;; (defun dts/org-capture-store-link ()
+;;   (if (eq major-mode 'org-mode)
+;;     (let ((id (org-entry-get (point) "ID")))
+;;       (when id
+;;         (org-link-store-props :type "dts/org-capture-store-link"
+;;                               :link (concat "id:" id)
+;;                               :description id)))))
 
 ;;;;;; org agenda custom view
 (setq org-agenda-custom-commands
       '(("d" tags-tree "+日报")
         ("D" tags "+日报")
         ))
+(global-set-key (kbd "C-c a") #'org-agenda)
+;;;;;; org sidebar
+(defun dts/org-sidebar-key ()
+  (define-key org-mode-map (kbd "M-o M-u") #'org-sidebar-tree-toggle)
+  (define-key org-mode-map (kbd "M-o M-i") #'org-sidebar-toggle))
+(add-hook 'org-mode-hook #'dts/org-sidebar-key)
+
 ;;;;; org-roam
 
 (setq org-roam-directory (file-truename "~/notes"))
@@ -330,6 +349,54 @@
             #'org-roam-reflinks-section
             ;; #'org-roam-unlinked-references-section
             ))
+
+;;;;; org-sidebar
+;; for follow mode
+(defun dts/org-sidebar-tree-next ()
+  (interactive)
+  (next-line)
+  (org-sidebar-tree-jump))
+(defun dts/org-sidebar-tree-prev ()
+  (interactive)
+  (previous-line)
+  (org-sidebar-tree-jump))
+(cl-defun org-sidebar-tree-disp-indirect (&key children)
+  "Display an indirect buffer showing the heading at point.
+If CHILDREN is non-nil (interactively, with prefix), also show
+child headings in the indirect buffer.  Should be called from a
+tree-view buffer."
+  (interactive "P")
+  (unless (buffer-base-buffer)
+    (error "Must be in a tree buffer"))
+  (let* ((new-buffer (org-sidebar--subtree-buffer children))
+         (current-window (selected-window))
+         (base-buffer (buffer-base-buffer))
+         (indirect-buffers
+          ;; Collect list of indirect buffers for the tree buffer's
+          ;; base buffer, not including the tree buffer.
+          (cl-loop for buffer in (buffer-list)
+                   when (and (eq (buffer-base-buffer buffer) base-buffer)
+                             (not (eq buffer (current-buffer))))
+                   collect buffer into buffers
+                   finally return (-uniq buffers)))
+         (displayed-buffer (--first (get-buffer-window it) indirect-buffers))
+         (window (when displayed-buffer
+                   (get-buffer-window displayed-buffer))))
+    (if window
+        (progn
+          (select-window window)
+          (switch-to-buffer new-buffer))
+      (pop-to-buffer new-buffer
+                     (cons 'display-buffer-use-some-window
+                           (list (cons 'inhibit-same-window t)))))
+    (select-window current-window)))
+(eval-after-load 'org-sidebar
+  '(progn
+     (message "doerthous org-sidebar setting")
+     (define-key org-sidebar-tree-map "p" #'dts/org-sidebar-tree-prev)
+     (define-key org-sidebar-tree-map "n" #'dts/org-sidebar-tree-next)
+     (setq org-sidebar-tree-jump-fn #'org-sidebar-tree-disp-indirect)
+     ))
 
 ;;;;; outline-minor-mode
 ;; local bind key for `outline-minor-mode'
@@ -515,7 +582,7 @@ check `current-global-map'.
 (eval-after-load 'sr-speedbar
   '(progn
      (message "%s" "doerthous sr-speedbar setting...")
-     (global-set-key (kbd "C-c o") 'sr-speedbar-toggle)
+     (global-set-key (kbd "M-o M-o") 'sr-speedbar-toggle)
      (setq sr-speedbar-right-side nil)
      ;; show all files
      (custom-set-variables
@@ -659,7 +726,7 @@ check `current-global-map'.
 
 (defvar parameters
   '(window-parameters . ((no-other-window . t)
-                         (no-delete-other-windows . t))))
+                         (no-delete-other-windows . nil))))
 
 (setq fit-window-to-buffer-horizontally t)
 (setq window-resize-pixelwise t)
@@ -676,7 +743,7 @@ check `current-global-map'.
              `("\\*\\(?:help\\|grep\\|Completions\\|Messages\\)\\*"
                display-buffer-in-side-window
                (side . bottom) (slot . -1) (preserve-size . (nil . t))
-    ,parameters))
+               ,parameters))
 (add-to-list 'display-buffer-alist
              `("\\*\\(?:shell\\|compilation\\)\\*"
                display-buffer-in-side-window
@@ -684,21 +751,28 @@ check `current-global-map'.
                ,parameters))
 
 ;;;;; Advice
-(defadvice save-buffer (before dts/delete-trailing-whitespace-before-save activate)
+(defadvice save-buffer
+    (before dts/delete-trailing-whitespace-before-save activate)
   "Delete trailing whitespace before save buffer"
   (delete-trailing-whitespace))
 ;;;;; Keybindings
-(global-set-key (kbd "C-c j") 'goto-line)
 (global-set-key (kbd "C-c i") 'open-init-file)
+(global-set-key (kbd "C-c j") 'goto-line)
+(global-set-key (kbd "C-c m") 'set-mark-command)
+(global-set-key (kbd "C-c x") 'delete-trailing-whitespace)
+(global-set-key (kbd "M-o M-s") #'dts-toggle-shell-window)
+(global-set-key (kbd "M-o M-q") #'window-toggle-side-windows)
 (global-set-key (kbd "C-c [") 'hs-show-block)
 (global-set-key (kbd "C-c ]") 'hs-hide-block)
 (global-set-key (kbd "C-c {") 'hs-show-all)
 (global-set-key (kbd "C-c }") 'hs-hide-all)
-(global-set-key (kbd "C-c c") 'comment-or-uncomment-region)
-(global-set-key (kbd "C-c m") 'set-mark-command)
-(global-set-key (kbd "C-c x") 'delete-trailing-whitespace)
-(global-set-key (kbd "C-c c") #'org-capture)
-(global-set-key (kbd "C-c a") #'org-agenda)
+
+(global-set-key (kbd "C-c b s") #'(lambda () (interactive)
+                                    (switch-to-buffer "*scratch*")))
+(global-set-key (kbd "C-c b m") #'(lambda () (interactive)
+                                    (switch-to-buffer "*Messages*")))
+(global-set-key (kbd "C-c b d") #'(lambda () (interactive)
+                                    (switch-to-buffer "*dashboard*")))
 ;;;; DTS Minor Mode
 
 ;;;;; DTS Commands
@@ -755,10 +829,6 @@ check `current-global-map'.
   (define-key dts-keymap (kbd "S-C-<right>") 'enlarge-window-horizontally)
   (define-key dts-keymap (kbd "S-C-<down>")  'shrink-window)
   (define-key dts-keymap (kbd "S-C-<up>")    'enlarge-window)
-  (define-key dts-keymap (kbd "TAB") '(lambda () (interactive) (dts-hs-toggle (kbd "TAB"))))
-  (define-key dts-keymap (kbd "C-c d e f g") '(lambda () (interactive) (message "dummy")))
-  (define-key dts-keymap (kbd "s") #'dts-toggle-shell-window)
-  (define-key dts-keymap (kbd "t w") #'window-toggle-side-windows)
   (define-key dts-keymap (kbd "q") #'dts-keymap-mode))
 (define-minor-mode dts-keymap-mode
   "A minor mode so that global key settings override annoying major modes."

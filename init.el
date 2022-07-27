@@ -1,3 +1,14 @@
+(defun dts/message-with-timestamp (old-func fmt-string &rest args)
+  "Prepend current timestamp (with microsecond precision) to a message"
+  (apply old-func
+         (concat (format-time-string "[%Y-%m-%d %H:%M:%S] ")
+                 fmt-string)
+         args))
+(advice-add 'message :around #'dts/message-with-timestamp)
+(message "doerthous init.el start")
+;; (advice-remove 'message #'dts/message-with-timestamp)
+
+
 (add-to-list 'load-path "~/.emacs.d/plugins")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
@@ -62,3 +73,5 @@
  '(powerline-inactive0 ((t (:foreground "#0000" :background "#0000"))))
  '(powerline-inactive1 ((t (:inherit mode-line-inactive :foreground "#0000" :background "#0000"))))
  '(powerline-inactive2 ((t (:inherit mode-line-inactive :foreground "#0000" :background "#0000")))))
+
+(message "doerthous init.el end")
