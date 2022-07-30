@@ -1,0 +1,1 @@
+("c:/Users/Doerthous/Desktop/emacs-28.1/share/emacs/28.1/home/.emacs.d/" "c:/Users/Doerthous/Desktop/temp/orgzly-android/" "c:/Users/Doerthous/Desktop/learning/note/" "c:/Users/Doerthous/Desktop/temp/" "c:/Users/Doerthous/Desktop/temp/cproj/" "c:/Users/Doerthous/Desktop/temp/account_book/")

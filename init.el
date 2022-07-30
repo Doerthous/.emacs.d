@@ -34,8 +34,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(indent-tabs-mode nil)
- '(org-agenda-files
-   '("~/org/journal.org"))
+ '(org-agenda-files '("~/org/journal.org"))
  '(org-log-into-drawer t)
  '(org-log-note-headings
    '((done . "CLOSING NOTE %t")
@@ -48,7 +47,7 @@
      (refile . "Refiled on %t")
      (clock-out . "")))
  '(package-selected-packages
-   '(org-ql tabbar dashboard org-roam-ui org-roam projectile helm imenus pyim-basedict pyim htmlize valign ztree window-number yasnippet-snippets ## yasnippet smex expand-region company ggtags multiple-cursors spinner magit ht f dash-functional))
+   '(org-alert org ghub forge org-ql tabbar dashboard org-roam-ui org-roam projectile helm imenus pyim-basedict pyim htmlize valign ztree window-number yasnippet-snippets ## yasnippet smex expand-region company ggtags multiple-cursors spinner magit ht f dash-functional))
  '(powerline-default-separator 'utf-8)
  '(powerline-utf-8-separator-left 9654)
  '(powerline-utf-8-separator-right 9664)
@@ -61,6 +60,8 @@
  '(speedbar-use-images nil)
  '(speedbar-use-imenu-flag nil)
  '(tab-width 4)
+ '(warning-suppress-log-types '((emacs)))
+ '(warning-suppress-types '((emacs)))
  '(window-numbering-mode-line nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
